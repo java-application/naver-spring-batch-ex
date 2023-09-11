@@ -1,0 +1,48 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Build and Test with Maven
+        run: mvn clean verify
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      # 추가된 스텝: Dependabot Alert CSV Export
+      - name: Dependabot Alert CSV Export
+        uses: java-application/dependabot-alert-export@main
+        with:
+          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+          org_name: 'java-application'
+          repo_name: 'naver-spring-batch-ex'
+          csv_path: 'data/vulnerability.csv'
+
+        # 생성된 CSV 파일을 아티팩트로 업로드
+      - name: Upload Vulnerability report
+        uses: java-application/dependabot-alert-export@main
+        with:
+          name: vulnerability_report
+          path: data/vulnerability.csv
