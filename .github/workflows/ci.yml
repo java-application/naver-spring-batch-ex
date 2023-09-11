@@ -23,7 +23,7 @@ jobs:
           java-version: '11'
 
       - name: Build and Test with Maven
-        run: mvn clean verify
+        run: mvn clean verify -Dgpg.skip=true
 
       - name: Cache Maven packages
         uses: actions/cache@v2
@@ -42,7 +42,7 @@ jobs:
 
         # 생성된 CSV 파일을 아티팩트로 업로드
       - name: Upload Vulnerability report
-        uses: java-application/dependabot-alert-export@main
+        uses: actions/upload-artifact@v2
         with:
           name: vulnerability_report
           path: data/vulnerability.csv
