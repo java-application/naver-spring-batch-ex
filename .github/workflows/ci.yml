@@ -23,7 +23,7 @@ jobs:
           java-version: '11'
 
       - name: Build and Test with Maven
-        run: mvn clean verify -N
+        run: mvn clean verify -pl '!naver-spring-batch-extension,!naver-spring-batch-example'
 
       - name: Cache Maven packages
         uses: actions/cache@v2
