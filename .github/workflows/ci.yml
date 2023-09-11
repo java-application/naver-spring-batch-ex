@@ -23,7 +23,7 @@ jobs:
           java-version: '11'
 
       - name: Build and Test with Maven
-        run: mvn clean verify -Dgpg.skip=true
+        run: mvn clean verify -N
 
       - name: Cache Maven packages
         uses: actions/cache@v2
